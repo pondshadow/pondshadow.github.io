@@ -1,12 +1,10 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Pondshadow</title>
-        <link>pondshadow.github.io/</link>
-        <description>池边影的小站</description>
+        <title>All Posts - Pondshadow</title>
+        <link>pondshadow.github.io/posts/</link>
+        <description>All Posts | Pondshadow</description>
         <generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>iamchenboyi@163.com (池边影)</managingEditor>
-            <webMaster>iamchenboyi@163.com (池边影)</webMaster>
-            <atom:link href="pondshadow.github.io/index.xml" rel="self" type="application/rss+xml" />
-        <item>
+            <webMaster>iamchenboyi@163.com (池边影)</webMaster><atom:link href="pondshadow.github.io/posts/" rel="self" type="application/rss+xml" /><item>
     <title></title>
     <link>pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>

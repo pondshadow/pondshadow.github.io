@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title> - Pondshadow</title><meta name="Description" content="池边影的小站"><meta property="og:url" content="pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/">
+  <meta property="og:site_name" content="Pondshadow">
+  <meta property="og:title" content="Pondshadow">
+  <meta property="og:description" content="创建窗口 具体环境配置：https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/
+GLFW 作用：创建窗口与OpenGL上下文
+为何要自己做？
+OpenGL 只定义了渲染管线的标准（即「你怎么画」），并未规定如何创建窗口或上下文（即「在哪里画、怎样拿到上下文」）。不同操作系统对窗口管理和上下文创建的接口各不相同：Windows 用 Win32 API，Linux 用 X11/Wayland，macOS 用 Cocoa
+抽象的好处与成本
+OpenGL 故意将这些与渲染无关的部分抽象出去，让标准更聚焦。但这也意味着开发者要自己写跨平台的窗口和上下文代码，或引入第三方库来统一接口（GLFW为其中之一）
+典型流程
+初始化库（如 glfwInit()​） 创建窗口并指定 OpenGL 版本／Profile 切换到该上下文（glfwMakeContextCurrent​） 进入渲染循环：处理事件→绘制→交换缓冲 GLAD 作用：运行时加载 OpenGL 函数指针
+为什么要加载？
+OpenGL 的实现（驱动）由各显卡厂商提供，不同版本和扩展中的函数并不会统一导出到系统的链接库里。编译阶段无法确定它们的地址，必须在运行时询问驱动：“请给我 glGenBuffers​ 这条函数的入口在哪里？”
+原生做法（Windows 示例）
+typedef void (*GL_GENBUFFERS)(GLsizei, GLuint*); GL_GENBUFFERS glGenBuffers = (GL_GENBUFFERS)wglGetProcAddress(&#34;glGenBuffers&#34;); // 之后就能正常调用 glGenBuffers(1, &amp;buffer); 对每个函数都要如此重复，既繁琐又易错
+使用加载库的好处
+自动化：指定所需的 OpenGL 版本和扩展后，工具帮你生成对应的加载代码 精简：只包含用到的函数，减少冗余 跨平台：隐藏各系统查址接口的差异，如 Windows 的 wglGetProcAddress​、Linux 的 glXGetProcAddress​、macOS 的 NSGL​ 创建流程 GLAD 首先，新建一个.cpp​文件，包含GLAD和GLFW头文件
+#include &lt;glad/glad.h&gt; #include &lt;GLFW/glfw3.h&gt; 请确认是在包含GLFW的头文件之前包含了GLAD的头文件。GLAD的头文件包含了正确的OpenGL头文件，所以需要在其它依赖于OpenGL的头文件之前包含GLAD
+创建main函数，实例化GLFW窗口">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Pondshadow">
+  <meta name="twitter:description" content="创建窗口 具体环境配置：https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/
+GLFW 作用：创建窗口与OpenGL上下文
+为何要自己做？
+OpenGL 只定义了渲染管线的标准（即「你怎么画」），并未规定如何创建窗口或上下文（即「在哪里画、怎样拿到上下文」）。不同操作系统对窗口管理和上下文创建的接口各不相同：Windows 用 Win32 API，Linux 用 X11/Wayland，macOS 用 Cocoa
+抽象的好处与成本
+OpenGL 故意将这些与渲染无关的部分抽象出去，让标准更聚焦。但这也意味着开发者要自己写跨平台的窗口和上下文代码，或引入第三方库来统一接口（GLFW为其中之一）
+典型流程
+初始化库（如 glfwInit()​） 创建窗口并指定 OpenGL 版本／Profile 切换到该上下文（glfwMakeContextCurrent​） 进入渲染循环：处理事件→绘制→交换缓冲 GLAD 作用：运行时加载 OpenGL 函数指针
+为什么要加载？
+OpenGL 的实现（驱动）由各显卡厂商提供，不同版本和扩展中的函数并不会统一导出到系统的链接库里。编译阶段无法确定它们的地址，必须在运行时询问驱动：“请给我 glGenBuffers​ 这条函数的入口在哪里？”
+原生做法（Windows 示例）
+typedef void (*GL_GENBUFFERS)(GLsizei, GLuint*); GL_GENBUFFERS glGenBuffers = (GL_GENBUFFERS)wglGetProcAddress(&#34;glGenBuffers&#34;); // 之后就能正常调用 glGenBuffers(1, &amp;buffer); 对每个函数都要如此重复，既繁琐又易错
+使用加载库的好处
+自动化：指定所需的 OpenGL 版本和扩展后，工具帮你生成对应的加载代码 精简：只包含用到的函数，减少冗余 跨平台：隐藏各系统查址接口的差异，如 Windows 的 wglGetProcAddress​、Linux 的 glXGetProcAddress​、macOS 的 NSGL​ 创建流程 GLAD 首先，新建一个.cpp​文件，包含GLAD和GLFW头文件
+#include &lt;glad/glad.h&gt; #include &lt;GLFW/glfw3.h&gt; 请确认是在包含GLFW的头文件之前包含了GLAD的头文件。GLAD的头文件包含了正确的OpenGL头文件，所以需要在其它依赖于OpenGL的头文件之前包含GLAD
+创建main函数，实例化GLFW窗口">
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/" /><link rel="stylesheet" href="pondshadow.github.io/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "",
+        "inLanguage": "en-us",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "pondshadow.github.io\/posts\/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3\/"
+        },"genre": "posts","wordcount":  247 ,
+        "url": "pondshadow.github.io\/posts\/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3\/","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "池边影"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="pondshadow.github.io/" title="Pondshadow">PondShadow_池边影</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="pondshadow.github.io/" title="Pondshadow">PondShadow_池边影</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX"></h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="pondshadow.github.io/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>池边影</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;247 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;2 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#glad-1">GLAD</a></li>
+    <li><a href="#视口">视口</a></li>
+    <li><a href="#引擎">引擎</a></li>
+    <li><a href="#输入">输入</a></li>
+    <li><a href="#渲染">渲染</a></li>
+    <li><a href="#结果">结果</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="创建窗口">创建窗口</h1>
+<p>具体环境配置：<a href="https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/" target="_blank" rel="noopener noreffer ">https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/</a></p>
+<h1 id="glfw">GLFW</h1>
+<p>作用：创建窗口与OpenGL上下文</p>
+<ul>
+<li>
+<p>为何要自己做？<br>
+OpenGL 只定义了渲染管线的标准（即「你怎么画」），并未规定如何创建窗口或上下文（即「在哪里画、怎样拿到上下文」）。不同操作系统对窗口管理和上下文创建的接口各不相同：Windows 用 Win32 API，Linux 用 X11/Wayland，macOS 用 Cocoa</p>
+</li>
+<li>
+<p>抽象的好处与成本<br>
+OpenGL 故意将这些与渲染无关的部分抽象出去，让标准更聚焦。但这也意味着开发者要自己写跨平台的窗口和上下文代码，或引入第三方库来统一接口（GLFW为其中之一）</p>
+</li>
+<li>
+<p>典型流程</p>
+<ol>
+<li>初始化库（如 <code>glfwInit()</code>​）</li>
+<li>创建窗口并指定 OpenGL 版本／Profile</li>
+<li>切换到该上下文（<code>glfwMakeContextCurrent</code>​）</li>
+<li>进入渲染循环：处理事件→绘制→交换缓冲</li>
+</ol>
+</li>
+</ul>
+<h1 id="glad">GLAD</h1>
+<p>作用：运行时加载 OpenGL 函数指针</p>
+<ul>
+<li>
+<p>为什么要加载？<br>
+OpenGL 的实现（驱动）由各显卡厂商提供，不同版本和扩展中的函数并不会统一导出到系统的链接库里。编译阶段无法确定它们的地址，必须在运行时询问驱动：“请给我 <code>glGenBuffers</code>​ 这条函数的入口在哪里？”</p>
+</li>
+<li>
+<p>原生做法（Windows 示例）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#a6e22e">void</span> (<span style="color:#f92672">*</span>GL_GENBUFFERS)(GLsizei, GLuint<span style="color:#f92672">*</span>);
+</span></span><span style="display:flex;"><span>GL_GENBUFFERS glGenBuffers <span style="color:#f92672">=</span> (GL_GENBUFFERS)<span style="color:#a6e22e">wglGetProcAddress</span>(<span style="color:#e6db74">&#34;glGenBuffers&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 之后就能正常调用 glGenBuffers(1, &amp;buffer);
+</span></span></span></code></pre></div><p>对每个函数都要如此重复，既繁琐又易错</p>
+</li>
+<li>
+<p>使用加载库的好处</p>
+<ul>
+<li>自动化：指定所需的 OpenGL 版本和扩展后，工具帮你生成对应的加载代码</li>
+<li>精简：只包含用到的函数，减少冗余</li>
+<li>跨平台：隐藏各系统查址接口的差异，如 Windows 的 <code>wglGetProcAddress</code>​、Linux 的 <code>glXGetProcAddress</code>​、macOS 的 <code>NSGL</code>​</li>
+</ul>
+</li>
+</ul>
+<h1 id="创建流程">创建流程</h1>
+<h2 id="glad-1">GLAD</h2>
+<ol>
+<li>
+<p>首先，新建一个<code>.cpp</code>​文件，包含GLAD和GLFW头文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;glad/glad.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;GLFW/glfw3.h&gt;</span><span style="color:#75715e">
+</span></span></span></code></pre></div><blockquote>
+<p>请确认是在包含GLFW的头文件之前包含了GLAD的头文件。GLAD的头文件包含了正确的OpenGL头文件，所以需要在其它依赖于OpenGL的头文件之前包含GLAD</p></blockquote>
+</li>
+<li>
+<p>创建main函数，实例化GLFW窗口</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    glfwInit();
+</span></span><span style="display:flex;"><span>    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, <span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, <span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//for Mac:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ol>
+<li>
+<p>在main函数中调用glfwInit函数来初始化GLFW</p>
+</li>
+<li>
+<p>使用glfwWindowHint函数来配置GLFW，将主版本号(Major)和次版本号(Minor)都设为3</p>
+<p>glfwWindowHint函数的第一个参数代表选项的名称，可以从很多以GLFW_开头的枚举值中选择；第二个参数接受一个整型，用来设置这个选项的值</p>
+</li>
+<li>
+<p>告诉GLFW我们使用的是核心模式(Core-profile)，使用核心模式意味着只能使用OpenGL功能的一个子集</p>
+<blockquote>
+<p>在 OpenGL 中，“核心模式”（Core Profile）和“兼容模式”（Compatibility Profile）其实是对同一个 API 的两种不同打包方式，使用核心模式，能够确保你的程序只使用现代、可持续发展的 OpenGL 功能，避免踩到已废弃接口的坑，提高可维护性和跨平台一致性</p></blockquote>
+</li>
+</ol>
+</li>
+<li>
+<p>创建窗口对象，这个窗口对象存放了所有和窗口相关的数据</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>GLFWwindow<span style="color:#f92672">*</span> window <span style="color:#f92672">=</span> glfwCreateWindow(<span style="color:#ae81ff">800</span>, <span style="color:#ae81ff">600</span>, <span style="color:#e6db74">&#34;LearnOpenGL&#34;</span>, NULL, NULL);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (window <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Failed to create GLFW window&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    glfwTerminate();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>glfwMakeContextCurrent(window);
+</span></span></code></pre></div><p>glfwCreateWindow函数前两个参数为窗口的宽和高，第三个参数表示这个窗口的名称（标题），最后两个参数暂时忽略。这个函数将会返回一个GLFWwindow对象，会在其它的GLFW操作中多次使用到</p>
+<p>创建完窗口后，把 <code>window</code>​ 这个窗口背后的 OpenGL 上下文，绑定（“make current”）到当前的线程上</p>
+</li>
+<li>
+<p>初始化GLAD，即可调用OpenGL函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Failed to initialize GLAD&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>向GLAD传入了用来加载系统相关的OpenGL函数指针地址的函数。GLFW给我们的是<code>glfwGetProcAddress</code>​，它根据我们编译的系统定义了正确的函数</p>
+</li>
+</ol>
+<h2 id="视口">视口</h2>
+<ol>
+<li>
+<p>创建一个回调函数(Callback Function)，用于当用户改变窗口的大小的时候，调整视口</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">framebuffer_size_callback</span>(GLFWwindow<span style="color:#f92672">*</span> window, <span style="color:#66d9ef">int</span> width, <span style="color:#66d9ef">int</span> height)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    glViewport(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, width, height);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这个函数需要一个GLFWwindow作为它的第一个参数，以及两个整数表示窗口的新维度</p>
+</li>
+<li>
+<p>在函数中调用glViewport函数来设置视口的尺寸（如上）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>glViewport(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">800</span>, <span style="color:#ae81ff">600</span>);
+</span></span></code></pre></div><p>glViewport函数前两个参数控制窗口左下角的位置，第三个和第四个参数控制渲染窗口的宽度和高度</p>
+</li>
+<li>
+<p>调用这个函数，通知GLFW每当窗口调整大小的时候调用这个函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="引擎">引擎</h2>
+<ol>
+<li>
+<p>添加渲染循环（Render Loop）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>glfwWindowShouldClose(window))
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    glfwSwapBuffers(window);
+</span></span><span style="display:flex;"><span>    glfwPollEvents();    
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>glfwWindowShouldClose函数在每次循环的开始前检查一次GLFW是否被要求退出，如果是的话，该函数返回<code>true</code>​，渲染循环将停止运行，之后就可以关闭应用程序</li>
+<li>glfwPollEvents函数检查有没有触发什么事件（比如键盘输入、鼠标移动等）、更新窗口状态，并调用对应的回调函数（可以通过回调方法手动设置）</li>
+<li>glfwSwapBuffers函数会交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上</li>
+</ul>
+</li>
+<li>
+<p>调用glfwTerminate，在渲染循环结束后释放之前分配的所有资源</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>glfwTerminate();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="输入">输入</h2>
+<ol>
+<li>
+<p>创建一个processInput函数装载GLFW的glfwGetKey函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processInput</span>(GLFWwindow <span style="color:#f92672">*</span>window)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(glfwGetKey(window, GLFW_KEY_ESCAPE) <span style="color:#f92672">==</span> GLFW_PRESS)
+</span></span><span style="display:flex;"><span>        glfwSetWindowShouldClose(window, true);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>glfwGetKey函数需要一个窗口以及一个按键作为输入，这个函数将会返回这个按键是否正在被按下</p>
+</li>
+<li>
+<p>在渲染循环的每一个迭代中调用processInput</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>glfwWindowShouldClose(window))
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    processInput(window);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    glfwSwapBuffers(window);
+</span></span><span style="display:flex;"><span>    glfwPollEvents();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="渲染">渲染</h2>
+<p>所有的渲染(Rendering)操作都应放到渲染循环中，代码将会是这样的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// 渲染循环
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>glfwWindowShouldClose(window))
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 输入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    processInput(window);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 渲染指令
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 检查并调用事件，交换缓冲
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    glfwPollEvents();
+</span></span><span style="display:flex;"><span>    glfwSwapBuffers(window);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>在每个新的渲染迭代开始要进行清屏处理，否则仍能看见上一次的渲染结果。调用glClear函数来清空屏幕的颜色缓冲，它接受一个缓冲位(Buffer Bit)来指定要清空的缓冲，可能的缓冲位有GL_COLOR_BUFFER_BIT，GL_DEPTH_BUFFER_BIT和GL_STENCIL_BUFFER_BIT</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>glClearColor(<span style="color:#ae81ff">0.2f</span>, <span style="color:#ae81ff">0.3f</span>, <span style="color:#ae81ff">0.3f</span>, <span style="color:#ae81ff">1.0f</span>);
+</span></span><span style="display:flex;"><span>glClear(GL_COLOR_BUFFER_BIT);
+</span></span></code></pre></div><p>同时调用了glClearColor来设置清空屏幕所用的颜色，当调用glClear函数，清除颜色缓冲之后，整个颜色缓冲都会被填充为glClearColor里所设置的颜色</p>
+<blockquote>
+<p>glClearColor函数是一个状态设置函数，而glClear函数则是一个状态使用的函数，它使用了当前的状态来获取应该清除为的颜色</p></blockquote>
+<h2 id="结果">结果</h2>
+<p><img
+        class="lazyload"
+        src="pondshadow.github.io/svg/loading.min.svg"
+        data-src="assets/tmpE2AA-20250716172702-k3mv4u5.png"
+        data-srcset="assets/tmpE2AA-20250716172702-k3mv4u5.png, assets/tmpE2AA-20250716172702-k3mv4u5.png 1.5x, assets/tmpE2AA-20250716172702-k3mv4u5.png 2x"
+        data-sizes="auto"
+        alt="assets/tmpE2AA-20250716172702-k3mv4u5.png"
+        title="tmpE2AA" />​</p>
+<blockquote>
+<p>我搞的蓝色~</p></blockquote>
+<h1 id="完整代码">完整代码</h1>
+<p><a href="https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/1.2.hello_window_clear/hello_window_clear.cpp" target="_blank" rel="noopener noreffer ">https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/1.2.hello_window_clear/hello_window_clear.cpp</a></p>
+<p>‍</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 0001-01-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/" data-title=""><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/" data-title=""><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/" data-title=""><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/" data-title=""><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="pondshadow.github.io/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"></div>
+</div>
+</article></div>
+            </main></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="pondshadow.github.io/js/theme.min.js"></script></body>
+</html>

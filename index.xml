@@ -1,6 +1,6 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>My New Hugo Site</title>
+        <title>Pondshadow</title>
         <link>pondshadow.github.io/</link>
         <description>池边影的小站</description>
         <generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>iamchenboyi@163.com (池边影)</managingEditor>

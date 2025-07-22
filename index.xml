@@ -1,10 +1,10 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>My New Hugo Site</title>
-        <link>http://localhost:1313/</link>
+        <link>pondshadow.github.io/</link>
         <description>池边影的小站</description>
         <generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>iamchenboyi@163.com (池边影)</managingEditor>
             <webMaster>iamchenboyi@163.com (池边影)</webMaster>
-            <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+            <atom:link href="pondshadow.github.io/index.xml" rel="self" type="application/rss+xml" />
         </channel>
 </rss>

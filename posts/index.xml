@@ -1,73 +1,80 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-    <channel>
-        <title>All Posts - Pondshadow</title>
-        <link>pondshadow.github.io/posts/</link>
-        <description>All Posts | Pondshadow</description>
-        <generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>iamchenboyi@163.com (池边影)</managingEditor>
-            <webMaster>iamchenboyi@163.com (池边影)</webMaster><atom:link href="pondshadow.github.io/posts/" rel="self" type="application/rss+xml" /><item>
-    <title></title>
-    <link>pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/</link>
-    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>池边影</author>
-    <guid>pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/</guid>
-    <description><![CDATA[<h1 id="创建窗口">创建窗口</h1>
-<p>具体环境配置：<a href="https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/" target="_blank" rel="noopener noreffer ">https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/</a></p>
-<h1 id="glfw">GLFW</h1>
-<p>作用：创建窗口与OpenGL上下文</p>
-<ul>
-<li>
-<p>为何要自己做？<br>
-OpenGL 只定义了渲染管线的标准（即「你怎么画」），并未规定如何创建窗口或上下文（即「在哪里画、怎样拿到上下文」）。不同操作系统对窗口管理和上下文创建的接口各不相同：Windows 用 Win32 API，Linux 用 X11/Wayland，macOS 用 Cocoa</p>
-</li>
-<li>
-<p>抽象的好处与成本<br>
-OpenGL 故意将这些与渲染无关的部分抽象出去，让标准更聚焦。但这也意味着开发者要自己写跨平台的窗口和上下文代码，或引入第三方库来统一接口（GLFW为其中之一）</p>
-</li>
-<li>
-<p>典型流程</p>
-<ol>
-<li>初始化库（如 <code>glfwInit()</code>​）</li>
-<li>创建窗口并指定 OpenGL 版本／Profile</li>
-<li>切换到该上下文（<code>glfwMakeContextCurrent</code>​）</li>
-<li>进入渲染循环：处理事件→绘制→交换缓冲</li>
-</ol>
-</li>
-</ul>
-<h1 id="glad">GLAD</h1>
-<p>作用：运行时加载 OpenGL 函数指针</p>
-<ul>
-<li>
-<p>为什么要加载？<br>
-OpenGL 的实现（驱动）由各显卡厂商提供，不同版本和扩展中的函数并不会统一导出到系统的链接库里。编译阶段无法确定它们的地址，必须在运行时询问驱动：“请给我 <code>glGenBuffers</code>​ 这条函数的入口在哪里？”</p>
-</li>
-<li>
-<p>原生做法（Windows 示例）</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#a6e22e">void</span> (<span style="color:#f92672">*</span>GL_GENBUFFERS)(GLsizei, GLuint<span style="color:#f92672">*</span>);
-</span></span><span style="display:flex;"><span>GL_GENBUFFERS glGenBuffers <span style="color:#f92672">=</span> (GL_GENBUFFERS)<span style="color:#a6e22e">wglGetProcAddress</span>(<span style="color:#e6db74">&#34;glGenBuffers&#34;</span>);
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 之后就能正常调用 glGenBuffers(1, &amp;buffer);
-</span></span></span></code></pre></div><p>对每个函数都要如此重复，既繁琐又易错</p>
-</li>
-<li>
-<p>使用加载库的好处</p>
-<ul>
-<li>自动化：指定所需的 OpenGL 版本和扩展后，工具帮你生成对应的加载代码</li>
-<li>精简：只包含用到的函数，减少冗余</li>
-<li>跨平台：隐藏各系统查址接口的差异，如 Windows 的 <code>wglGetProcAddress</code>​、Linux 的 <code>glXGetProcAddress</code>​、macOS 的 <code>NSGL</code>​</li>
-</ul>
-</li>
-</ul>
-<h1 id="创建流程">创建流程</h1>
-<h2 id="glad-1">GLAD</h2>
-<ol>
-<li>
-<p>首先，新建一个<code>.cpp</code>​文件，包含GLAD和GLFW头文件</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;glad/glad.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;GLFW/glfw3.h&gt;</span><span style="color:#75715e">
-</span></span></span></code></pre></div><blockquote>
-<p>请确认是在包含GLFW的头文件之前包含了GLAD的头文件。GLAD的头文件包含了正确的OpenGL头文件，所以需要在其它依赖于OpenGL的头文件之前包含GLAD</p></blockquote>
-</li>
-<li>
-<p>创建main函数，实例化GLFW窗口</p>]]></description>
-</item>
-</channel>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Pondshadow</title>
+    <link>pondshadow.github.io/posts/</link>
+    <description>Recent content in Posts on Pondshadow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2025 </copyright>
+    <atom:link href="pondshadow.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title></title>
+      <link>pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>pondshadow.github.io/posts/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/</guid>
+      <description>&lt;h1 class=&#34;relative group&#34;&gt;创建窗口 
+    &lt;div id=&#34;创建窗口&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
+    
+    &lt;span
+        class=&#34;absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100&#34;&gt;
+        &lt;a class=&#34;group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline&#34; href=&#34;#%e5%88%9b%e5%bb%ba%e7%aa%97%e5%8f%a3&#34; aria-label=&#34;Anchor&#34;&gt;#&lt;/a&gt;
+    &lt;/span&gt;        
+    
+&lt;/h1&gt;
+&lt;p&gt;具体环境配置：&lt;a
+  href=&#34;https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/&#34;
+    target=&#34;_blank&#34;
+  &gt;https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 class=&#34;relative group&#34;&gt;GLFW 
+    &lt;div id=&#34;glfw&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
+    
+    &lt;span
+        class=&#34;absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100&#34;&gt;
+        &lt;a class=&#34;group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline&#34; href=&#34;#glfw&#34; aria-label=&#34;Anchor&#34;&gt;#&lt;/a&gt;
+    &lt;/span&gt;        
+    
+&lt;/h1&gt;
+&lt;p&gt;作用：创建窗口与OpenGL上下文&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;为何要自己做？&lt;br&gt;
+OpenGL 只定义了渲染管线的标准（即「你怎么画」），并未规定如何创建窗口或上下文（即「在哪里画、怎样拿到上下文」）。不同操作系统对窗口管理和上下文创建的接口各不相同：Windows 用 Win32 API，Linux 用 X11/Wayland，macOS 用 Cocoa&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;抽象的好处与成本&lt;br&gt;
+OpenGL 故意将这些与渲染无关的部分抽象出去，让标准更聚焦。但这也意味着开发者要自己写跨平台的窗口和上下文代码，或引入第三方库来统一接口（GLFW为其中之一）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;典型流程&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;初始化库（如 &lt;code&gt;glfwInit()&lt;/code&gt;​）&lt;/li&gt;
+&lt;li&gt;创建窗口并指定 OpenGL 版本／Profile&lt;/li&gt;
+&lt;li&gt;切换到该上下文（&lt;code&gt;glfwMakeContextCurrent&lt;/code&gt;​）&lt;/li&gt;
+&lt;li&gt;进入渲染循环：处理事件→绘制→交换缓冲&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 class=&#34;relative group&#34;&gt;GLAD 
+    &lt;div id=&#34;glad&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
+    
+    &lt;span
+        class=&#34;absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100&#34;&gt;
+        &lt;a class=&#34;group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline&#34; href=&#34;#glad&#34; aria-label=&#34;Anchor&#34;&gt;#&lt;/a&gt;
+    &lt;/span&gt;        
+    
+&lt;/h1&gt;
+&lt;p&gt;作用：运行时加载 OpenGL 函数指针&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;为什么要加载？&lt;br&gt;
+OpenGL 的实现（驱动）由各显卡厂商提供，不同版本和扩展中的函数并不会统一导出到系统的链接库里。编译阶段无法确定它们的地址，必须在运行时询问驱动：“请给我 &lt;code&gt;glGenBuffers&lt;/code&gt;​ 这条函数的入口在哪里？”&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
 </rss>

@@ -4,10 +4,10 @@
     <title>Categories on Pondshadow</title>
     <link>pondshadow.github.io/categories/</link>
     <description>Recent content in Categories on Pondshadow</description>
-    <generator>Hugo</generator>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <managingEditor>iamchenboyi@163.com (池边影)</managingEditor>
-    <webMaster>iamchenboyi@163.com (池边影)</webMaster>
+    <copyright>© 2025 </copyright>
     <atom:link href="pondshadow.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    
   </channel>
 </rss>

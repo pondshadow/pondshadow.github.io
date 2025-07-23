@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://pondshadow.github.io/sitemap.xml

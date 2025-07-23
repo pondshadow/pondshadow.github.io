@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.pondshadow.top/sitemap.xml
+Sitemap: https://pondshadow.github.io/sitemap.xml

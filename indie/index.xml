@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>池边影の小站</title>
-    <link>https://pondshadow.github.io/</link>
+    <title>独立游戏 - 池边影の小站</title>
+    <link>https://pondshadow.github.io/indie/</link>
     <description>池边影の小站</description>
     <generator>Hugo 0.148.1 &amp; FixIt v0.4.0-alpha-20250721024521-a1cd700b</generator>
     <language>zh-cn</language>
     <lastBuildDate></lastBuildDate>
-    <atom:link href="https://pondshadow.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://pondshadow.github.io/indie/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

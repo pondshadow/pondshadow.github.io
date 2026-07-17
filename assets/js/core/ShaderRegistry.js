@@ -4,6 +4,8 @@ const REQUIRED_FIELDS = [
   "title",
   "subtitle",
   "description",
+  "principle",
+  "unrealApplication",
   "vertex",
   "fragment"
 ];

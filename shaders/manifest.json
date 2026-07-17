@@ -5,6 +5,8 @@
     "title": "扭曲碑体",
     "subtitle": "距离场雕塑",
     "description": "由距离场雕刻而成的动态碑体，具有柔和阴影与环绕镜头。",
+    "principle": "使用有符号距离场组合圆角盒、圆环与地面；片元沿视线步进寻找表面，再用有限差分估算法线，最后叠加软阴影、镜面高光与边缘光。",
+    "unrealApplication": "可先在材质编辑器的 Custom 节点中验证距离场函数，再接入后处理材质，用于程序化雕塑、溶解遮罩、魔法屏障或关卡中的抽象装置预演。",
     "vertex": "./shaders/common/fullscreen.vert",
     "fragment": "./shaders/monolith/fragment.frag"
   },
@@ -14,6 +16,8 @@
     "title": "融球花园",
     "subtitle": "有机体积",
     "description": "不断融合与分离的隐式曲面，在程序化地面上方缓慢生长。",
+    "principle": "多个运动球体通过平滑最小值函数进行软布尔融合，生成连续的 Metaball 表面；环境遮蔽与双向光照强化了体积感和接触阴影。",
+    "unrealApplication": "适合转写为 Niagara 驱动的材质参数：粒子位置可控制多个球心，再以 Custom 节点或材质函数生成黏液、生物组织、能量团和角色技能特效。",
     "vertex": "./shaders/common/fullscreen.vert",
     "fragment": "./shaders/metaballs/fragment.frag"
   },
@@ -23,6 +27,8 @@
     "title": "无限殿堂",
     "subtitle": "无尽建筑",
     "description": "镜头持续穿行于循环生成的发光建筑结构之中。",
+    "principle": "对 Z 轴空间执行周期取模，使圆环、立柱与悬浮核心无限重复；相机持续前移，配合距离衰减雾与发光累积，形成无尽通道的视觉错觉。",
+    "unrealApplication": "原型阶段可用后处理材质快速探索空间节奏；正式关卡建议以 Instanced Static Mesh 或模块化蓝图承载建筑实体，再让材质与体积雾继承这里的发光和色彩逻辑。",
     "vertex": "./shaders/common/fullscreen.vert",
     "fragment": "./shaders/temple/fragment.frag"
   },
@@ -32,6 +38,8 @@
     "title": "螺旋核心",
     "subtitle": "数学曲面",
     "description": "旋转的三重周期极小曲面，呈现虹彩光照与深邃的内部结构。",
+    "principle": "Gyroid 是由三角函数构成的三重周期极小曲面。Shader 以其隐式方程估算距离，再限制在球形边界内，并用菲涅耳项和虹彩调色突出内部结构。",
+    "unrealApplication": "可将 Gyroid 距离场写进材质 Custom 节点，或预烘焙为体积纹理以提升性能；适合制作科幻核心、异形建筑表皮、传送门内部和动态遮罩。",
     "vertex": "./shaders/common/fullscreen.vert",
     "fragment": "./shaders/gyroid/fragment.frag"
   }

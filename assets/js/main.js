@@ -16,6 +16,10 @@ const fullscreenToggle = document.querySelector("[data-fullscreen-toggle]");
 const activeIndex = document.querySelector("[data-active-index]");
 const activeTitle = document.querySelector("[data-active-title]");
 const activeDescription = document.querySelector("[data-active-description]");
+const activePrinciple = document.querySelector("[data-active-principle]");
+const activeUnrealApplication = document.querySelector(
+  "[data-active-unreal-application]"
+);
 
 let registry = [];
 let shaderChoices = [];
@@ -56,6 +60,8 @@ function updateMetadata(entry) {
   activeIndex.textContent = entry.index;
   activeTitle.textContent = entry.title;
   activeDescription.textContent = entry.description;
+  activePrinciple.textContent = entry.principle;
+  activeUnrealApplication.textContent = entry.unrealApplication;
 
   stageMeta.animate(
     [

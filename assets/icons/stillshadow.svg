@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Stillshadow</title>
+  <defs>
+    <linearGradient id="spectral-edge" x1="18" y1="14" x2="47" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D5FF70"/>
+      <stop offset="0.46" stop-color="#7FF3DE"/>
+      <stop offset="1" stop-color="#9B8CFF"/>
+    </linearGradient>
+    <radialGradient id="quiet-light" cx="0" cy="0" r="1" gradientTransform="translate(24 20) rotate(48) scale(35)">
+      <stop stop-color="#4A557C"/>
+      <stop offset="1" stop-color="#202536"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="17" fill="#171B28"/>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#7E8AB8" stroke-opacity=".18" stroke-width="1.2"/>
+  <circle cx="29" cy="29" r="18" fill="url(#quiet-light)"/>
+  <circle cx="35" cy="35" r="18" fill="#0B0E17"/>
+  <path d="M43.5 15.6A20 20 0 0 1 51.2 34.1" fill="none" stroke="url(#spectral-edge)" stroke-linecap="round" stroke-width="3.4"/>
+  <circle cx="43.8" cy="16.9" r="2.05" fill="#E8FFB8"/>
+</svg>

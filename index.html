@@ -8,12 +8,13 @@
   >
   <meta
     name="description"
-    content="Pondshadow 的实时三维 WebGL 着色器作品画廊。"
+    content="池边影的个人实时图形、三维着色器与虚幻引擎视觉实验作品集。"
   >
 
   <title>池边影の着色器</title>
 
   <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="icon" href="./assets/icons/stillshadow.svg" type="image/svg+xml">
 
   <script type="importmap">
     {
@@ -28,7 +29,7 @@
 <body>
   <header class="site-header">
     <a class="brand" href="./" aria-label="返回着色器画廊首页">
-      <span class="brand__mark" aria-hidden="true"></span>
+      <img class="brand__icon" src="./assets/icons/stillshadow.svg" alt="">
       <span>池边影の着色器</span>
     </a>
 
@@ -59,13 +60,30 @@
 
       <div class="shader-stage__meta">
         <span class="shader-stage__index" data-active-index>001</span>
-        <div>
+        <div class="shader-stage__copy">
+          <p class="shader-stage__eyebrow">作品档案</p>
           <h1 id="active-shader-title" data-active-title>
             扭曲碑体
           </h1>
           <p data-active-description>
             由距离场雕刻而成的动态碑体，具有柔和阴影与环绕镜头。
           </p>
+
+          <div class="shader-stage__notes">
+            <section>
+              <h2>运行原理</h2>
+              <p data-active-principle>
+                通过有符号距离场组合几何体，并沿相机视线逐步寻找表面，再计算法线、阴影与高光。
+              </p>
+            </section>
+
+            <section>
+              <h2>虚幻引擎应用</h2>
+              <p data-active-unreal-application>
+                可作为后处理材质或 Custom 节点的原型，用于程序化雕塑、特效遮罩与场景氛围设计。
+              </p>
+            </section>
+          </div>
         </div>
       </div>
     </section>

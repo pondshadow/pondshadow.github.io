@@ -17,9 +17,6 @@ const activeIndex = document.querySelector("[data-active-index]");
 const activeTitle = document.querySelector("[data-active-title]");
 const activeDescription = document.querySelector("[data-active-description]");
 const activePrinciple = document.querySelector("[data-active-principle]");
-const activeUnrealApplication = document.querySelector(
-  "[data-active-unreal-application]"
-);
 
 let registry = [];
 let shaderChoices = [];
@@ -45,6 +42,8 @@ function setPickerOpen(open, { persist = true } = {}) {
 }
 
 function showStatus(message, { error = false, retry = false } = {}) {
+  if (!status || !statusText || !retryButton) return;
+
   status.hidden = false;
   status.classList.toggle("is-error", error);
   statusText.textContent = message;
@@ -52,16 +51,17 @@ function showStatus(message, { error = false, retry = false } = {}) {
 }
 
 function hideStatus() {
+  if (!status || !retryButton) return;
+
   status.hidden = true;
   retryButton.hidden = true;
 }
 
 function updateMetadata(entry) {
-  activeIndex.textContent = entry.index;
-  activeTitle.textContent = entry.title;
-  activeDescription.textContent = entry.description;
-  activePrinciple.textContent = entry.principle;
-  activeUnrealApplication.textContent = entry.unrealApplication;
+  if (activeIndex) activeIndex.textContent = entry.index;
+  if (activeTitle) activeTitle.textContent = entry.title;
+  if (activeDescription) activeDescription.textContent = entry.description;
+  if (activePrinciple) activePrinciple.textContent = entry.principle;
 
   stageMeta.animate(
     [
@@ -133,7 +133,9 @@ function renderShaderList(entries) {
   shaderList.replaceChildren();
   shaderChoices = entries.map(createShaderChoice);
   shaderList.append(...shaderChoices);
-  shaderCount.textContent = `${String(entries.length).padStart(2, "0")} 个作品`;
+  if (shaderCount) {
+    shaderCount.textContent = `${String(entries.length).padStart(2, "0")} 个作品`;
+  }
 }
 
 function updateUrl(id, mode) {

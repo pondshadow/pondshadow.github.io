@@ -1,45 +1,56 @@
 [
   {
-    "id": "monolith",
+    "id": "toon-island",
     "index": "001",
+    "title": "云上蘑菇屋",
+    "subtitle": "卡通渲染",
+    "description": "一座漂浮在晴空中的蘑菇小屋：缓慢环绕的镜头、摇曳的树林和飘过的云层让小场景始终保持生气。移动鼠标可以改变观看角度。",
+    "principle": "卡通感来自清晰的明暗分层与轮廓控制：将光照结果量化为少量色阶，以软阴影稳定受光边界，再用环境遮蔽压深物体交界处；深色描边让岛屿、房屋和树木在远处依然易读。",
+    "unrealApplication": "在 UE 中可用材质函数把 Base Color、N·L 和阴影遮罩组合为多档明暗色带；在后处理材质中通过 Scene Depth 与法线差异检测屏幕空间边缘并叠加描边。将该材质赋给岛屿、房屋与植被，并使用 Directional Light、Sky Light 和 Virtual Shadow Maps 保留柔和投影。",
+    "vertex": "./shaders/common/fullscreen.vert",
+    "fragment": "./shaders/toon-island/fragment.frag"
+  },
+  {
+    "id": "monolith",
+    "index": "002",
     "title": "扭曲碑体",
     "subtitle": "距离场雕塑",
     "description": "由距离场雕刻而成的动态碑体，具有柔和阴影与环绕镜头。",
-    "principle": "使用有符号距离场组合圆角盒、圆环与地面；片元沿视线步进寻找表面，再用有限差分估算法线，最后叠加软阴影、镜面高光与边缘光。",
-    "unrealApplication": "可先在材质编辑器的 Custom 节点中验证距离场函数，再接入后处理材质，用于程序化雕塑、溶解遮罩、魔法屏障或关卡中的抽象装置预演。",
+    "principle": "碑体的厚重感由扭曲的轮廓、缓慢转动的视角和连续的受光变化共同建立。柔化的投影压住底部，高光沿弯曲表面滑动，边缘光把轮廓从深色背景中提出来。",
+    "unrealApplication": "在 UE 中以静态网格或 Geometry Script 生成碑体，顶点动画或 World Position Offset 提供缓慢扭曲；材质中用 Fresnel 混入边缘色，并以粗糙度和法线变化控制高光。使用可旋转的 Directional Light、Lumen/环境光和软阴影即可复现这种雕塑展示效果。",
     "vertex": "./shaders/common/fullscreen.vert",
     "fragment": "./shaders/monolith/fragment.frag"
   },
   {
     "id": "metaballs",
-    "index": "002",
+    "index": "003",
     "title": "融球花园",
     "subtitle": "有机体积",
     "description": "不断融合与分离的隐式曲面，在程序化地面上方缓慢生长。",
-    "principle": "多个运动球体通过平滑最小值函数进行软布尔融合，生成连续的 Metaball 表面；环境遮蔽与双向光照强化了体积感和接触阴影。",
-    "unrealApplication": "适合转写为 Niagara 驱动的材质参数：粒子位置可控制多个球心，再以 Custom 节点或材质函数生成黏液、生物组织、能量团和角色技能特效。",
+    "principle": "多个球形体在接近时平滑地融合，分离时又拉出柔软的连接面。接触处更深的遮蔽、表面的渐变高光和不同方向的补光，使它看起来像有弹性的液体而不是彼此穿插的圆球。",
+    "unrealApplication": "在 UE 中可用 Niagara 驱动球心位置与半径，再通过材质 Custom 节点计算平滑融合遮罩；若需要真实轮廓，可用 Niagara Fluids、VDB 或运行时网格生成表面。材质以 Fresnel、深度淡化和局部法线扰动强化黏连、高光与接触阴影。",
     "vertex": "./shaders/common/fullscreen.vert",
     "fragment": "./shaders/metaballs/fragment.frag"
   },
   {
     "id": "temple",
-    "index": "003",
+    "index": "004",
     "title": "无限殿堂",
     "subtitle": "无尽建筑",
     "description": "镜头持续穿行于循环生成的发光建筑结构之中。",
-    "principle": "对 Z 轴空间执行周期取模，使圆环、立柱与悬浮核心无限重复；相机持续前移，配合距离衰减雾与发光累积，形成无尽通道的视觉错觉。",
-    "unrealApplication": "原型阶段可用后处理材质快速探索空间节奏；正式关卡建议以 Instanced Static Mesh 或模块化蓝图承载建筑实体，再让材质与体积雾继承这里的发光和色彩逻辑。",
+    "principle": "重复的拱环、立柱和发光核心以固定节奏延伸到远方；远处被雾逐渐吞没，发光在暗部累积，持续前移的镜头让有限的结构看似没有终点。",
+    "unrealApplication": "在 UE 中用模块化网格搭建一个节段，并以 Instanced Static Mesh 或蓝图沿轴线重复；让相机或节段匀速移动制造穿行感。材质使用 Emissive 控制核心与边缘发光，Exponential Height Fog/体积雾控制远景衰减，再用后处理统一蓝紫色调。",
     "vertex": "./shaders/common/fullscreen.vert",
     "fragment": "./shaders/temple/fragment.frag"
   },
   {
     "id": "gyroid",
-    "index": "004",
+    "index": "005",
     "title": "螺旋核心",
     "subtitle": "数学曲面",
     "description": "旋转的三重周期极小曲面，呈现虹彩光照与深邃的内部结构。",
-    "principle": "Gyroid 是由三角函数构成的三重周期极小曲面。Shader 以其隐式方程估算距离，再限制在球形边界内，并用菲涅耳项和虹彩调色突出内部结构。",
-    "unrealApplication": "可将 Gyroid 距离场写进材质 Custom 节点，或预烘焙为体积纹理以提升性能；适合制作科幻核心、异形建筑表皮、传送门内部和动态遮罩。",
+    "principle": "Gyroid 的三重周期曲面会在各个方向连续穿插，形成既规则又难以一眼看透的孔洞结构。旋转、深色内部遮蔽和沿视角变化的虹彩边缘共同强调其层次与神秘感。",
+    "unrealApplication": "在 UE 中可将 Gyroid 预制为 Nanite 静态网格，或烘焙为体积纹理供材质采样；材质用 Fresnel 与视角相关的颜色渐变表现虹彩，并用 Emissive 点亮内部。通过蓝图旋转网格、配合低强度体积雾和局部点光源，能得到稳定且易控的核心效果。",
     "vertex": "./shaders/common/fullscreen.vert",
     "fragment": "./shaders/gyroid/fragment.frag"
   }

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "monolith",
+    "index": "001",
+    "title": "扭曲碑体",
+    "subtitle": "距离场雕塑",
+    "description": "由距离场雕刻而成的动态碑体，具有柔和阴影与环绕镜头。",
+    "vertex": "./shaders/common/fullscreen.vert",
+    "fragment": "./shaders/monolith/fragment.frag"
+  },
+  {
+    "id": "metaballs",
+    "index": "002",
+    "title": "融球花园",
+    "subtitle": "有机体积",
+    "description": "不断融合与分离的隐式曲面，在程序化地面上方缓慢生长。",
+    "vertex": "./shaders/common/fullscreen.vert",
+    "fragment": "./shaders/metaballs/fragment.frag"
+  },
+  {
+    "id": "temple",
+    "index": "003",
+    "title": "无限殿堂",
+    "subtitle": "无尽建筑",
+    "description": "镜头持续穿行于循环生成的发光建筑结构之中。",
+    "vertex": "./shaders/common/fullscreen.vert",
+    "fragment": "./shaders/temple/fragment.frag"
+  },
+  {
+    "id": "gyroid",
+    "index": "004",
+    "title": "螺旋核心",
+    "subtitle": "数学曲面",
+    "description": "旋转的三重周期极小曲面，呈现虹彩光照与深邃的内部结构。",
+    "vertex": "./shaders/common/fullscreen.vert",
+    "fragment": "./shaders/gyroid/fragment.frag"
+  }
+]

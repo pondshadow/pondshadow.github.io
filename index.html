@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+  <meta
+    name="description"
+    content="Pondshadow 的实时三维 WebGL 着色器作品画廊。"
+  >
+
+  <title>池边影の着色器</title>
+
+  <link rel="stylesheet" href="./assets/css/style.css">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="返回着色器画廊首页">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span>池边影の着色器</span>
+    </a>
+
+    <div class="site-header__actions">
+      <button
+        class="header-button"
+        type="button"
+        aria-pressed="false"
+        data-fullscreen-toggle
+      >
+        全屏
+      </button>
+    </div>
+  </header>
+
+  <main class="showcase">
+    <section class="shader-stage" aria-labelledby="active-shader-title">
+      <div
+        id="shader-preview"
+        class="shader-stage__canvas"
+        aria-label="实时三维着色器预览"
+      >
+        <div class="shader-status" role="status" data-shader-status>
+          <span data-status-text>正在载入着色器…</span>
+          <button type="button" hidden data-retry-shader>重试</button>
+        </div>
+      </div>
+
+      <div class="shader-stage__meta">
+        <span class="shader-stage__index" data-active-index>001</span>
+        <div>
+          <h1 id="active-shader-title" data-active-title>
+            扭曲碑体
+          </h1>
+          <p data-active-description>
+            由距离场雕刻而成的动态碑体，具有柔和阴影与环绕镜头。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="shader-picker" data-shader-picker data-open="true">
+      <button
+        class="shader-picker__toggle"
+        type="button"
+        aria-controls="shader-picker-panel"
+        aria-expanded="true"
+        aria-label="隐藏着色器作品栏"
+        data-picker-toggle
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+
+      <aside
+        id="shader-picker-panel"
+        class="shader-picker__panel"
+        aria-label="选择着色器作品"
+        data-picker-panel
+      >
+        <div class="shader-picker__header">
+          <p>作品选择</p>
+          <span data-shader-count>00 个作品</span>
+        </div>
+
+        <nav class="shader-list" aria-label="着色器作品列表" data-shader-list>
+          <p class="shader-list__loading">正在载入作品…</p>
+        </nav>
+
+        <div class="shader-picker__footer" aria-label="键盘快捷键">
+          <span><kbd>M</kbd> 作品栏</span>
+          <span><kbd>F</kbd> 全屏</span>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <noscript>
+    <p class="noscript-message">
+      该画廊需要启用 JavaScript 和 WebGL。
+    </p>
+  </noscript>
+
+  <script type="module" src="./assets/js/main.js"></script>
+</body>
+</html>

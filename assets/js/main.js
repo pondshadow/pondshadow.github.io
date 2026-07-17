@@ -195,7 +195,7 @@ async function activateShader(id, { historyMode = null, force = false } = {}) {
 
     container.classList.remove("is-loading");
     hideStatus();
-    document.title = `${entry.title} — 着色器画廊`;
+    document.title = `${entry.title} — 池边影の小站`;
 
     if (historyMode) updateUrl(entry.id, historyMode);
   } catch (error) {

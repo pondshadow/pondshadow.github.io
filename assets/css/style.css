@@ -756,7 +756,17 @@ a {
 }
 
 .entry-page__canvas .shader-renderer {
+  transform: translate(-8%, -8%) scale(1.2);
+  transform-origin: center;
   transition-duration: 1100ms, 1500ms, 1100ms;
+}
+
+.entry-page__canvas .shader-renderer.is-entering {
+  transform: translate(-8%, -8%) scale(1.23);
+}
+
+.entry-page__canvas .shader-renderer.is-leaving {
+  transform: translate(-8%, -8%) scale(1.17);
 }
 
 .entry-page__content {

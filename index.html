@@ -2,20 +2,11 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  >
-  <meta
-    name="description"
-    content="池边影的个人实时图形与三维着色器视觉实验作品集。"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="池边影的实时图形与三维着色器作品集。">
   <title>池边影の小站</title>
-
   <link rel="stylesheet" href="./assets/css/style.css">
-  <link rel="icon" href="./assets/icons/stillshadow-mark.png" type="image/png">
-
+  <link rel="icon" href="./assets/icons/stillshadow.svg" type="image/svg+xml">
   <script type="importmap">
     {
       "imports": {
@@ -25,103 +16,13 @@
     }
   </script>
 </head>
-
-<body>
-  <header class="site-header">
-    <a class="brand" href="./" aria-label="返回着色器画廊首页">
-      <img class="brand__icon" src="./assets/icons/stillshadow-mark.png" alt="">
-      <span>池边影の小站</span>
-    </a>
-
-    <div class="site-header__actions">
-      <button
-        class="header-button"
-        type="button"
-        aria-pressed="false"
-        data-fullscreen-toggle
-      >
-        全屏
-      </button>
-    </div>
-  </header>
-
-  <main class="showcase">
-    <section class="shader-stage" aria-labelledby="active-shader-title">
-      <div
-        id="shader-preview"
-        class="shader-stage__canvas"
-        aria-label="实时三维着色器预览"
-      >
-        <div class="shader-status" role="status" data-shader-status>
-          <span data-status-text>正在载入着色器…</span>
-          <button type="button" hidden data-retry-shader>重试</button>
-        </div>
-      </div>
-
-      <div class="shader-stage__meta">
-        <span class="shader-stage__index" data-active-index>001</span>
-        <div class="shader-stage__copy">
-          <p class="shader-stage__eyebrow">作品档案</p>
-          <h1 id="active-shader-title" data-active-title>
-            扭曲碑体
-          </h1>
-          <p data-active-description>
-            由距离场雕刻而成的动态碑体，具有柔和阴影与环绕镜头。
-          </p>
-
-          <div class="shader-stage__notes">
-            <section>
-              <h2>运行原理</h2>
-              <p data-active-principle>
-                通过有符号距离场组合几何体，并沿相机视线逐步寻找表面，再计算法线、阴影与高光。
-              </p>
-            </section>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="shader-picker" data-shader-picker data-open="true">
-      <button
-        class="shader-picker__toggle"
-        type="button"
-        aria-controls="shader-picker-panel"
-        aria-expanded="true"
-        aria-label="隐藏着色器作品栏"
-        data-picker-toggle
-      >
-        <span aria-hidden="true">×</span>
-      </button>
-
-      <aside
-        id="shader-picker-panel"
-        class="shader-picker__panel"
-        aria-label="选择着色器作品"
-        data-picker-panel
-      >
-        <div class="shader-picker__header">
-          <p>作品选择</p>
-          <span data-shader-count>00 个作品</span>
-        </div>
-
-        <nav class="shader-list" aria-label="着色器作品列表" data-shader-list>
-          <p class="shader-list__loading">正在载入作品…</p>
-        </nav>
-
-        <div class="shader-picker__footer" aria-label="键盘快捷键">
-          <span><kbd>M</kbd> 作品栏</span>
-          <span><kbd>F</kbd> 全屏</span>
-        </div>
-      </aside>
-    </div>
+<body class="entry-page">
+  <div class="entry-page__canvas" aria-hidden="true" data-entry-canvas></div>
+  <main class="entry-page__content">
+    <h1>池边影の小站</h1>
+    <a class="entry-page__enter" href="./gallery.html">ENTER</a>
+    <p class="entry-page__status" role="status" hidden data-entry-status></p>
   </main>
-
-  <noscript>
-    <p class="noscript-message">
-      该画廊需要启用 JavaScript 和 WebGL。
-    </p>
-  </noscript>
-
-  <script type="module" src="./assets/js/main.js?v=20260718-ue-section-removed"></script>
+  <script type="module" src="./assets/js/entry.js?v=20260718-shader-slideshow"></script>
 </body>
 </html>

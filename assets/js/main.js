@@ -233,14 +233,7 @@ async function bootstrap() {
     registry = await loadShaderRegistry();
     renderShaderList(registry);
 
-    const savedPickerState = localStorage.getItem("shader-gallery-floating-picker-open");
-    const defaultPickerOpen = window.matchMedia("(min-width: 641px)").matches;
-    setPickerOpen(
-      savedPickerState === null
-        ? defaultPickerOpen
-        : savedPickerState === "true",
-      { persist: false }
-    );
+    setPickerOpen(true, { persist: false });
 
     const requestedId = decodeURIComponent(location.hash.slice(1));
     const initialEntry = registry.find((entry) => entry.id === requestedId);

@@ -155,14 +155,14 @@ void main() {
   vec3 origin = vec3(sin(orbit) * 5.5, 2.3 + mouse.y * 1.25, cos(orbit) * 5.5);
   vec3 direction = cameraRay(uv * 0.84, origin, vec3(0.0, -0.18, 0.0));
 
-  vec3 skyBottom = vec3(0.22, 0.61, 0.88);
-  vec3 skyTop = vec3(0.72, 0.9, 0.98);
+  vec3 skyBottom = vec3(0.018, 0.055, 0.13);
+  vec3 skyTop = vec3(0.075, 0.19, 0.34);
   vec3 color = mix(skyBottom, skyTop, smoothstep(-0.65, 0.7, direction.y));
 
   vec2 skyUv = vec2(direction.x / max(0.25, direction.z), direction.y);
   float clouds = cloudBand(skyUv, vec2(-0.68 + sin(u_time * 0.025) * 0.08, 0.3), vec2(0.38, 0.08));
   clouds += cloudBand(skyUv, vec2(0.52 + sin(u_time * 0.018) * 0.06, 0.08), vec2(0.52, 0.1));
-  color = mix(color, vec3(0.97), clamp(clouds, 0.0, 0.68));
+  color = mix(color, vec3(0.36, 0.52, 0.7), clamp(clouds, 0.0, 0.48));
 
   float travel = 0.0;
   float material = 0.0;
@@ -182,18 +182,18 @@ void main() {
     float diffuse = max(dot(normal, sunDirection), 0.0);
     float shadow = softShadow(point + normal * 0.012, sunDirection);
     float toonLight = floor((diffuse * shadow) * 3.0) / 3.0;
-    float ambient = 0.28 + 0.14 * max(normal.y, 0.0);
+    float ambient = 0.18 + 0.1 * max(normal.y, 0.0);
     float occlusion = ambientOcclusion(point, normal);
     float rim = smoothstep(0.45, 0.9, 1.0 - max(dot(normal, viewDirection), 0.0));
     vec3 base = materialColor(material, point);
 
     color = base * (ambient + toonLight * 0.82) * occlusion;
-    color += rim * vec3(1.0, 0.93, 0.72) * 0.18;
+    color += rim * vec3(0.48, 0.7, 1.0) * 0.12;
     color = mix(color, vec3(0.11, 0.055, 0.1), smoothstep(0.48, 0.93, 1.0 - max(dot(normal, viewDirection), 0.0)) * 0.62);
     color = mix(color, skyBottom, 1.0 - exp(-travel * 0.065));
   }
 
   float vignette = 1.0 - smoothstep(0.7, 1.42, length(uv));
-  color *= 0.8 + vignette * 0.2;
-  outColor = vec4(pow(max(color, 0.0), vec3(0.78)), 1.0);
+  color *= 0.66 + vignette * 0.34;
+  outColor = vec4(pow(max(color, 0.0), vec3(0.92)), 1.0);
 }

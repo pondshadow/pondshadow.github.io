@@ -8,9 +8,11 @@
 
 ## 目录职责
 
-- `index.html`：页面结构、文案、可访问性语义、Three.js import map。
+- `index.html`：入口页结构、文案、可访问性语义、Three.js import map。
+- `gallery.html`：实时着色器展示页结构、作品档案、作品选择器与全屏入口。
 - `assets/css/style.css`：所有页面样式与响应式规则。
 - `assets/js/main.js`：作品选择、URL hash、全屏和页面交互。
+- `assets/js/entry.js`：入口页 Shader 背景轮播与入口状态提示。
 - `assets/js/core/ShaderRegistry.js`：读取并校验 `shaders/manifest.json`。
 - `assets/js/core/ShaderCanvas.js`：WebGL renderer 生命周期、uniform、尺寸与上下文恢复。
 - `shaders/manifest.json`：作品列表及元数据，是新增作品的入口。
@@ -26,11 +28,11 @@
 python -m http.server 8000
 ```
 
-然后访问 `http://localhost:8000/`。若系统没有 Python，可使用任意不改写文件的静态服务器。
+然后访问 `http://localhost:8000/`；展示页为 `http://localhost:8000/gallery.html`。若系统没有 Python，可使用任意不改写文件的静态服务器。
 
 每次涉及视觉或交互的修改，至少在桌面和窄屏视口手动检查：
 
-1. 首次加载能显示首个作品，浏览器控制台没有错误。
+1. 入口页能显示 Shader 背景轮播，进入展示页后能显示首个作品，浏览器控制台没有错误。
 2. 作品列表、URL hash 前进/后退、键盘操作和全屏按钮正常。
 3. 切换每个作品，确认 WebGL/GLSL 没有编译错误、画面不会明显掉帧。
 4. 检查 `git diff --check` 和 `git status --short`。

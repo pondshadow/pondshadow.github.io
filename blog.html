@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="池边影的博客 — 随笔、笔记与技术分享。">
+  <title>博客 — 池边影の小站</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="icon" href="./assets/icons/stillshadow.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="返回入口页">
+      <img class="brand__icon" src="./assets/icons/stillshadow.svg" alt="">
+      <span>池边影の小站</span>
+    </a>
+
+    <nav class="site-header__nav" aria-label="站点导航">
+      <a class="header-button" href="./gallery.html">SHADERS</a>
+    </nav>
+  </header>
+
+  <main class="blog-main" data-blog-main>
+    <section class="blog-list" aria-label="文章列表" data-blog-list>
+      <p class="blog-list__loading">正在载入文章…</p>
+    </section>
+
+    <article class="blog-post" aria-label="文章内容" data-blog-post hidden>
+      <button class="blog-post__back" type="button" data-blog-back>
+        <span aria-hidden="true">←</span> 返回列表
+      </button>
+      <div class="blog-post__body" data-blog-body></div>
+    </article>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
+  <script type="module" src="./assets/js/blog.js?v=20260720-initial"></script>
+</body>
+</html>

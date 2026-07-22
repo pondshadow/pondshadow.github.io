@@ -1,7 +1,7 @@
 # STATE.md
 
 ## Current Phase
-本轮开发完成，待用户验收
+已合并到稳定主分支
 
 ## Active Task
 无
@@ -10,16 +10,16 @@
 无
 
 ## Current Branch
-dev
+main
 
 ## Starting Commit
 ddc3229
 
 ## Current Project State
 - 静态作品集站点，GitHub Pages 托管于 www.stillshadow.com
-- `dev` 基于 `ddc3229`，本轮修改尚未提交
-- 首页背景已居中，安卓窄屏作品缩略图点击后尺寸保持稳定
-- 博客列表、文章阅读与 hash 历史导航可用
+- `dev` 已通过 `005fcf3` 合并到 `main`
+- 首页背景居中、安卓窄屏作品栏修复和博客页面均已进入稳定主分支
+- `main` 将随本次发布记录一并推送到 `origin/main`
 
 ## Changes
 - 首页 canvas 显示尺寸绑定视口并移除偏移变换
@@ -36,13 +36,14 @@ ddc3229
 - 安卓窄屏视口 412×915：点击作品前后缩略图均为 40×30，列表项尺寸稳定
 - 博客列表、文章加载、返回列表和浏览器前进/后退：通过，控制台无页面错误
 - `git diff --check`：通过
+- 合并后 JavaScript 语法、JSON 解析与 `git diff --check`：通过
 
 ## Risks
 - 已用安卓尺寸视口验证，尚未在实体安卓设备上复测浏览器差异
 
 ## Next Actions
-1. 用户在实体安卓设备上复测作品栏点击行为
-2. 用户验收后按需提交并推送 `dev`
+1. 在实体安卓设备上复测作品栏点击行为
+2. 观察 GitHub Pages 部署结果
 
 ## Relevant Files
 - `assets/css/style.css`
@@ -52,4 +53,4 @@ ddc3229
 - `blog.html`
 
 ## Last Handoff
-2026-07-22：本轮修改与验证完成，Owner 已释放；修改仅存在于当前工作树，尚未提交。
+2026-07-22：`dev` 通过合并提交 `005fcf3` 合并到 `main`；合并后验证通过，Owner 已释放。

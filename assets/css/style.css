@@ -755,18 +755,24 @@ a {
   pointer-events: none;
 }
 
+.entry-page__canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .entry-page__canvas .shader-renderer {
-  transform: translate(-8%, -8%) scale(1.2);
+  transform: scale(1.2);
   transform-origin: center;
   transition-duration: 1100ms, 1500ms, 1100ms;
 }
 
 .entry-page__canvas .shader-renderer.is-entering {
-  transform: translate(-8%, -8%) scale(1.23);
+  transform: scale(1.23);
 }
 
 .entry-page__canvas .shader-renderer.is-leaving {
-  transform: translate(-8%, -8%) scale(1.17);
+  transform: scale(1.17);
 }
 
 .entry-page__content {
@@ -967,7 +973,7 @@ a {
   }
 }
 
-@media (max-width: 640px) and (hover: none) {
+@media (max-width: 640px) {
   .shader-picker__panel:hover,
   .shader-picker__panel:focus-within {
     width: var(--picker-collapsed-width);
@@ -997,8 +1003,16 @@ a {
   .shader-picker__panel:focus-within .shader-list__copy,
   .shader-picker__panel:focus-within .shader-list__number,
   .shader-picker__panel:focus-within .shader-picker__footer {
+    position: absolute;
     opacity: 0;
     pointer-events: none;
+  }
+
+  .shader-picker__panel:hover .shader-picker__footer,
+  .shader-picker__panel:focus-within .shader-picker__footer {
+    max-height: 0;
+    padding: 0 1.5rem;
+    border-color: transparent;
   }
 
   /* Prevent tap-triggered hover effects on list items */
@@ -1010,6 +1024,12 @@ a {
   }
 
   .shader-list__item:hover .shader-list__preview {
+    border-radius: 0.2rem;
+    transform: none;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0.45rem 1rem rgba(0, 0, 0, 0.16);
+  }
+
+  .shader-list__item:focus-visible .shader-list__preview {
     border-radius: 0.2rem;
     transform: none;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0.45rem 1rem rgba(0, 0, 0, 0.16);

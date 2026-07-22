@@ -10,14 +10,17 @@
 
 - `index.html`：入口页结构、文案、可访问性语义、Three.js import map。
 - `gallery.html`：实时着色器展示页结构、作品档案、作品选择器与全屏入口。
+- `blog.html`：博客文章列表与文章阅读页结构。
 - `assets/css/style.css`：所有页面样式与响应式规则。
 - `assets/js/main.js`：作品选择、URL hash、全屏和页面交互。
 - `assets/js/entry.js`：入口页 Shader 背景轮播与入口状态提示。
+- `assets/js/blog.js`：博客清单加载、Markdown 渲染与 URL hash 路由。
 - `assets/js/core/ShaderRegistry.js`：读取并校验 `shaders/manifest.json`。
 - `assets/js/core/ShaderCanvas.js`：WebGL renderer 生命周期、uniform、尺寸与上下文恢复。
 - `shaders/manifest.json`：作品列表及元数据，是新增作品的入口。
 - `shaders/common/fullscreen.vert`：共享全屏顶点着色器。
 - `shaders/<作品 id>/fragment.frag`：各作品的 GLSL 片元着色器。
+- `blogs/manifest.json` 与 `blogs/*.md`：博客文章索引与 Markdown 正文。
 - `assets/icons/`：站点图标等静态资源。
 
 ## 本地开发与验证
@@ -28,14 +31,15 @@
 python -m http.server 8000
 ```
 
-然后访问 `http://localhost:8000/`；展示页为 `http://localhost:8000/gallery.html`。若系统没有 Python，可使用任意不改写文件的静态服务器。
+然后访问 `http://localhost:8000/`；展示页为 `http://localhost:8000/gallery.html`，博客页为 `http://localhost:8000/blog.html`。若系统没有 Python，可使用任意不改写文件的静态服务器。
 
 每次涉及视觉或交互的修改，至少在桌面和窄屏视口手动检查：
 
 1. 入口页能显示 Shader 背景轮播，进入展示页后能显示首个作品，浏览器控制台没有错误。
 2. 作品列表、URL hash 前进/后退、键盘操作和全屏按钮正常。
 3. 切换每个作品，确认 WebGL/GLSL 没有编译错误、画面不会明显掉帧。
-4. 检查 `git diff --check` 和 `git status --short`。
+4. 博客列表、文章打开、返回列表和浏览器前进/后退正常。
+5. 检查 `git diff --check` 和 `git status --short`。
 
 ## 修改约定
 

@@ -16,11 +16,11 @@ function renderPostList(items) {
   items.forEach((post, i) => {
     const card = document.createElement("a");
     card.className = "blog-card";
-    card.href = `#post/${post.id}`;
+    card.href = `#/post/${post.id}`;
     card.style.setProperty("--card-index", i);
 
     const date = document.createElement("time");
-    card.className = "blog-card__date";
+    date.className = "blog-card__date";
     date.dateTime = post.date;
     date.textContent = post.date;
 
@@ -45,7 +45,7 @@ function renderPostList(items) {
 
 async function loadPost(id) {
   const post = posts.find((p) => p.id === id);
-  if (!post || !marked || !postBody) return false;
+  if (!post || !window.marked || !postBody) return false;
 
   postBody.innerHTML = `<p class="blog-post__loading">正在载入文章…</p>`;
   postArticle.hidden = false;
@@ -56,15 +56,15 @@ async function loadPost(id) {
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const md = await resp.text();
 
-    // Configure marked for safe rendering
-    marked.setOptions({
+    // Configure rendering for repository-owned Markdown files.
+    window.marked.setOptions({
       breaks: true,
       gfm: true,
       headerIds: true,
       mangle: false
     });
 
-    postBody.innerHTML = marked.parse(md);
+    postBody.innerHTML = window.marked.parse(md);
     document.title = `${post.title} — 池边影の小站`;
     return true;
   } catch (error) {
@@ -79,11 +79,11 @@ async function loadPost(id) {
   }
 }
 
-function showList() {
+function showList({ updateHistory = true } = {}) {
   postArticle.hidden = true;
   listSection.hidden = false;
   document.title = "博客 — 池边影の小站";
-  history.pushState(null "", "./blog.html");
+  if (updateHistory) history.pushState(null, "", "./blog.html");
 }
 
 function parseRoute(hash) {
@@ -137,7 +137,7 @@ window.addEventListener("popstate", () => {
   if (postId) {
     loadPost(postId);
   } else {
-    showList();
+    showList({ updateHistory: false });
   }
 });
 

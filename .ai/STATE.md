@@ -13,39 +13,36 @@
 dev
 
 ## Starting Commit
-ddc3229
+88c56b3
 
 ## Current Project State
 - 静态作品集站点，GitHub Pages 托管于 www.stillshadow.com
-- `dev` 与 `origin/dev` 均位于 `ddc3229`；业务工作区在交接前干净
+- `dev` 与 `origin/dev` 均位于 `88c56b3`，工作区无业务修改
+- 本地 `main` 位于 `752241e`，已从主分支移除全部 AI 协作文件（`AGENTS.md`、`.ai/`、`.codex/`、`.workbuddy/`），比 `origin/main` 领先 1 个提交，**尚未推送**
+- `dev` 分支完整保留全部 AI 协作文件
 - 首页背景已居中，安卓窄屏作品缩略图点击后尺寸保持稳定
 - 博客列表、文章阅读与 hash 历史导航可用
 
 ## Changes
-- 首页 canvas 显示尺寸绑定视口并移除偏移变换
-- 窄屏禁用侧栏的桌面 hover/focus 展开布局，避免点击后拉伸
-- 修复博客卡片类名、路由、脚本语法和 `popstate` 历史处理
-- 补充项目文档中的博客目录与验证入口
+- 本次会话仅执行 Git 整理：`main` 分支提交 `752241e` 删除 AI 协作文件（6 个文件，251 行）
+- 业务文件（HTML/CSS/JS/GLSL/blogs）未改动
 - 本次交接仅更新 `.ai/STATE.md`
 
 ## Validation
-- `node --check assets/js/blog.js`：通过
-- `node --check assets/js/main.js`：通过
-- `node --check assets/js/entry.js`：通过
-- `blogs/manifest.json`、`shaders/manifest.json` JSON 解析：通过
-- 桌面视口 1280×720：首页 renderer 中心与视口中心均为 (640, 360)
-- 安卓窄屏视口 412×915：点击作品前后缩略图均为 40×30，列表项尺寸稳定
-- 博客列表、文章加载、返回列表和浏览器前进/后退：通过，控制台无页面错误
-- `git status --short --branch`：交接前工作区干净，`dev...origin/dev`
+- `git status --short --branch`：`dev...origin/dev`，无已跟踪文件修改
 - `git diff --check`：通过
+- 切换 main → dev 后 AI 协作文件完整恢复，内容与提交历史一致
+- 本次无业务代码改动，未重复执行页面级验证；此前验证（JS 语法检查、manifest JSON 解析、桌面与窄屏视口、博客导航）仍然有效
 
 ## Risks
+- 本地 `main` 的清理提交未推送；在他设备拉取 `origin/main` 仍会看到 AI 协作文件
 - 已用安卓尺寸视口验证，尚未在实体安卓设备上复测浏览器差异
 
 ## Next Actions
 1. 后续工作端先读取本文件、项目 `AGENTS.md` 与当前工作树。
-2. 用户可在实体安卓设备上复测作品栏点击行为。
-3. `.ai/STATE.md` 的交接更新尚未提交；如需跨设备续作，用户应先手动提交并推送 `dev`，再在目标设备手动拉取。
+2. 用户手动执行 `git push origin main`，使远程主分支同步移除 AI 协作文件。
+3. 用户可在实体安卓设备上复测作品栏点击行为。
+4. `.ai/STATE.md` 的交接更新尚未提交；如需跨设备续作，用户应先手动提交并推送 `dev`，再在目标设备手动拉取。
 
 ## Relevant Files
 - `assets/css/style.css`
@@ -57,4 +54,4 @@ ddc3229
 - `.ai/TASKS.md`
 
 ## Last Handoff
-2026-07-22：交接完成，Owner 已释放。业务文件未改动；仅 `.ai/STATE.md` 的交接记录尚未提交。
+2026-07-22：交接完成，Owner 已释放。业务文件未改动；`main` 已清理 AI 协作文件（本地提交 `752241e`，未推送）；仅 `.ai/STATE.md` 的交接记录尚未提交。
